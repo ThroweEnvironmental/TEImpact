@@ -233,6 +233,9 @@
 
         L.marker([38.4220, -76.0624], {icon: TNC}).addTo(map).bindPopup("Throwe Environmental is joining the Resilient Protection Frameworks (RPF) project (led by The Nature Conservancy) to support the Lower Eastern Shore of Maryland in becoming a model for resilient marsh ecosystems across the East Coast. At the intersection of migrating marshes and landowner resilience, the RPF initiative aims to protect cultural and financial interests within Maryland communities while also ensuring a healthy migration of tidal marshes. Together with Eastern Shore communities and topic experts, Throwe will host charrette discussions and workgroup meetings to inform the development of an action plan to incentivize marsh protection, management, and restoration.");
 
+        var projects = L.layerGroup([Balt,Anna,Ware,Chat,Orl,Brew,Har,Bourne,New,Port,Mid,Aquin,Con,TNC]);
+
+        var layerControl = L.control.layers(projects).addTo(map);
 
 
         /*function style_TE_maps_1_0(feature) {
