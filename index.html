@@ -21,16 +21,16 @@
     <body>
         <div id="map">
         </div>
-        <script src="../js/qgis2web_expressions.js"></script>
-        <script src="../js/leaflet.js"></script>
-        <script src="../js/leaflet.rotatedMarker.js"></script>
-        <script src="../js/leaflet.pattern.js"></script>
-        <script src="../js/leaflet-hash.js"></script>
-        <script src="../js/Autolinker.min.js"></script>
-        <script src="../js/rbush.min.js"></script>
-        <script src="../js/labelgun.min.js"></script>
-        <script src="../js/labels.js"></script>
-        <script src="../data/TE_maps_1.js"></script>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/TE_maps_1.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
@@ -233,6 +233,13 @@
 
         L.marker([38.4220, -76.0624], {icon: TNC}).addTo(map).bindPopup("Throwe Environmental is joining the Resilient Protection Frameworks (RPF) project (led by The Nature Conservancy) to support the Lower Eastern Shore of Maryland in becoming a model for resilient marsh ecosystems across the East Coast. At the intersection of migrating marshes and landowner resilience, the RPF initiative aims to protect cultural and financial interests within Maryland communities while also ensuring a healthy migration of tidal marshes. Together with Eastern Shore communities and topic experts, Throwe will host charrette discussions and workgroup meetings to inform the development of an action plan to incentivize marsh protection, management, and restoration.");
 
+        var projects = L.layerGroup([Balt,Anna,Ware,Chat,Orl,Brew,Har,Bourne,New,Port,Mid,Aquin,Con,TNC]);
+
+        var overlayMaps = {
+            "Projects": projects
+        };
+
+        var layerControl = L.control.layers(overlayMaps).addTo(map);
 
 
         /*function style_TE_maps_1_0(feature) {
