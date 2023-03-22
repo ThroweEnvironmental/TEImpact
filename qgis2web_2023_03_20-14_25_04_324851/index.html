@@ -235,7 +235,11 @@
 
         var projects = L.layerGroup([Balt,Anna,Ware,Chat,Orl,Brew,Har,Bourne,New,Port,Mid,Aquin,Con,TNC]);
 
-        var layerControl = L.control.layers(projects).addTo(map);
+        var overlayMaps = {
+            "Projects": projects
+        };
+
+        var layerControl = L.control.layers(overlayMaps).addTo(map);
 
 
         /*function style_TE_maps_1_0(feature) {
