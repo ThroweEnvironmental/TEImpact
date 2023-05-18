@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/TE_maps_1.js"></script>
+        <script>
+
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1,
+        }).fitBounds([[41.24913585672952,-71.12886071017789],[42.09155622283751,-70.01859368951571]]);
+
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        
+        map.setView([40.25,-90.5],4);
+        map.createPane('pane_MapboxStreetsv10_0');
+        map.getPane('pane_MapboxStreetsv10_0').style.zIndex = 400;
+
+        /*var OpenStreetMap_Mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });*/
+
+        var layer_MapboxStreetsv10_0 = L.tileLayer('https://api.mapbox.com/styles/v1/throweenvironmental/clgf8qo81000901ruwolzw74i/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhyb3dlZW52aXJvbm1lbnRhbCIsImEiOiJjbGZqdXZ1NzgwNGxoM3JwcTRrZDZoNzZxIn0.KWbFUGfLMTT9SnJ6WZSRuw', {
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_MapboxStreetsv10_0;
+        
+        map.addLayer(layer_MapboxStreetsv10_0);
+        function pop_TE_maps_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Project'] !== null ? autolinker.link(feature.properties['Project'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        //Taylor
+        var Taylor = L.icon({
+            iconUrl: 'taylor.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [30, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Taylor_popUp = "<b>Taylor Throwe<br>"+ "Our Team </b><br>"+ "Taylor is a Business Operations consultant focusing on project management, data and financial analysis, proposal writing and review, and accounting. Prior to her work with Throwe Environmental, Taylor worked as the Chief Operating Officer and Security Specialist for a government contractor managing over 30 contracts with the federal government. Taylor leads much of the company’s work as Field Support Liaison for the National Fish and Wildlife Foundation’s (NFWF) National Coastal Resilience Fund (NCRF), as well as the company’s work with the Town of Bourne, MA through the SNEP Network. Taylor has a B.S. in Business Management from the University of Maryland."
+
+        var Taylormark = L.marker([38.6948, -76.5337], {icon: Taylor}).addTo(map);
+
+        Taylormark.bindPopup(Taylor_popUp).openPopup();
+
+        //Courtney
+        var Courtney = L.icon({
+            iconUrl: 'courtney.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 10], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [15, -10] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Courtney_popUp = "<b>Courtney Greene<br>"+ "Our Team </b><br>"+ "Courtney graduated from the University of Rhode Island with a Master’s in Public Administration and a focus on Policy Analysis. Prior to starting her Master’s program, Courtney completed a B.S. at URI in Health Studies with a focus on health promotion and a minor in kinesiology. During the course of her studies, Courtney has helped develop two health promotion campaigns, worked part-time for the Frank Olean Center providing services to adolescents with developmental disabilities, and served as a policy fellow on a stormwater financing report for the Southeast New England Program (SNEP) Network."
+
+        var Courtneymark = L.marker([41.7001, -71.4162], {icon: Courtney}).addTo(map);
+
+        Courtneymark.bindPopup(Courtney_popUp).openPopup();
+
+        //Kyle
+        var Kyle = L.icon({
+            iconUrl: 'kyle.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [-20, -40], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [40, 40] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Kyle_popUp = "<b>Kyle Gray<br>"+ "Our Team </b><br>"+ "Kyle manages and oversees strategy for the company's full range of climate resilience and financing projects. Kyle is responsible for leading climate resilience planning efforts across Southeastern New England through Throwe's work as a core partner organization in the SNEP Network. Additionally, Kyle develops leadership development and asset prioritization tools for Throwe, including The Climate Leadership Exchange Podcast and the Planning to Action: Climate Toolkit.  Prior to his work with Throwe Environmental, Kyle served as a Congressional Campaign Coordinator, a Stormwater Infrastructure Mapping Intern, and a Congressional Intern. Kyle has a M.A in Marine Affairs, a Postbaccalaureate Certificate in Community Planning, a B.A. in Political Science and Italian, and a micro-credential in diversity and inclusion facilitation, all from the University of Rhode Island. Kyle is a certified Climate Change Professional (CC-P®) through the Association of Climate Change Officers."
+
+        var Kylemark = L.marker([38.9072, -77.0369], {icon: Kyle}).addTo(map);
+
+        Kylemark.bindPopup(Kyle_popUp).openPopup();
+
+        //Scott
+        var Scott = L.icon({
+            iconUrl: 'scott.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [20, -30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [0, 40] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Scott_popUp = "<b>Scott Throwe<br>"+ "Our Team </b><br>"+ "Scott worked at the United States Environmental Protection Agency for 30 years with a focus on the development, implementation, and enforcement of Clean Air Act regulations. He served as a manager and senior staff in the Office of Enforcement and Compliance Assurance and was the national lead for the toxic air pollutant program as well as several other Clean Air Act programs including New Source Review, and the asbestos program. During his career at EPA, Scott worked extensively with primary and secondary metals, minerals, paint/coatings, and agricultural industries. Scott was also a lead staff person for the implementation of the 1990 Clear Air Act Amendments. He served as a Peace Corps volunteer in the Solomon Islands where he worked as an agriculture extension agent for remote villages teaching agro-forestry methods to improve subsistence gardens. Scott resides in Bristol, Rhode Island."
+
+        var Scottmark = L.marker([41.6771, -71.2662],{icon: Scott}).addTo(map);
+
+        Scottmark.bindPopup(Scott_popUp).openPopup();
+
+
+        //Colin
+        var Colin = L.icon({
+            iconUrl: 'colin.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [30, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-15, -20] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Colin_popUp = "<b>Colin Griffin<br>"+ "Our Team </b><br>"+ "Colin completed his Bachelor's at the University of Maryland. He plans to pursue either law school or a Masters in Public Policy as a next step academically. Colin assists in planning NCRF regional events and works on the Anne Arundel/Annapolis Authority project."
+
+        var Colinmark = L.marker([38.9784, -76.4922], {icon: Colin}).addTo(map);
+
+        Colinmark.bindPopup(Colin_popUp).openPopup();
+
+        //Mark
+        var Mark = L.icon({
+            iconUrl: 'mark.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [30, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-15, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Mark_popUp = "<b>Mark Belton<br>"+ "Project Partner </b><br>"+ "Rear Admiral Mark Belton (Ret.) also currently serves as County Administrator for Charles County, Maryland. He has an extensive background leading state and local government organizations including previous roles as Maryland’s Secretary of Natural Resources; County Administrator for Queen Annes’ County, Maryland and Page County, Virginia; and Executive Director for Pride of Baltimore, Inc. Retired from military service as a Navy Rear Admiral, Mark served afloat and ashore throughout a 31-year career as a logistics expert with senior officer assignments including liaison to the Republic of Iraq ministries of Oil and Electricity, and as Commander of the Navy Expeditionary Logistics Support Group. He holds a B.S. from the United States Naval Academy; an M.B.A. from Regis University; and graduated from programs at the Naval War College, Armed Forces Staff College, and National Defense University. Mark has promoted innovation in climate change preparedness by championing the establishment of Maryland’s Climate Leadership Academy — the first state-led program of its kind in the nation, created Maryland’s first nonprofit Resilience Authority to finance local projects and become the nexus of community resilience discussions, and represents the Maryland Association of Counties (MACO) on the Maryland Commission on Climate Change (MCCC). Under his leadership, Charles County’s proactive whole-of-government approach to climate preparedness received recognition awards from both MACO and the National Association of Counties (NACO) and was cited by Standard & Poor (S&P) as influencing affirmation of their AAA credit rating. Mark partners with Throwe staff on various projects, including the National Coastal Resilience Fund."
+
+        var Markmark = L.marker([38.6654, -78.4595], {icon: Mark}).addTo(map);
+
+        Markmark.bindPopup(Mark_popUp).openPopup();
+
+        //Kim Groff
+        var Kim = L.icon({
+            iconUrl: 'kim.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [90, 20], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-60, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Kim_popUp = "<b>Kim Groff<br>"+ "Project Partner </b><br>"+ "Dr. Kimberly Groff has dedicated her 30+ year career to advancing water quality at a project, state, and regional scale. She serves as the Massachusetts liaison for the SNEP Network, where she conducts community- and watershed-scale planning to build capacity and support long-term climate resilience. As former Director of the MassDEP Watershed Planning Program, she managed policy development, surface water monitoring and standards, and TMDL and watershed plan development. She was involved with the Long Island Sound TMDL and participated in NEIWPCC workgroups focused on implementing pollution control. She provided modeling and grant oversight and collaborated with PVPC on the implementation of a LISFF monitoring grant. Kimberly previously worked as a water resources engineer at AMEC Earth and Environmental, HydroAnalysis, and ENSR (now AECOM), where she assisted a variety of clients and industries (e.g., energy, plastics, transportation, academia, state and federal agencies). She earned a Doctorate from Georgia Institute of Technology School of Civil and Environmental Engineering. She resides in Marblehead, MA and is an avid sailor. Kim partners with Throwe staff as a Field Liaison for the Long Island Sound Futures Fund and the National Coastal Resilience Fund."
+
+        var Kimmark = L.marker([42.5000, -70.8578], {icon: Kim}).addTo(map);
+
+        Kimmark.bindPopup(Kim_popUp).openPopup();
+
+        //Sarah Whitehouse
+        var Sarah = L.icon({
+            iconUrl: 'sarah.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [25, 50], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [0, -40] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Sarah_popUp = "<b>Sarah Whitehouse<br>"+ "Project Partner </b><br>"+ "Prior to joining Throwe Environmental, Sarah worked for the City of Newport, RI, where she resides, as the Community Resilience Specialist for the Department of Planning & Economic Development.  Serving the City for seven years, Sarah oversaw grants and projects involving preparation for sea level rise and climate change impacts, and participated in economic development efforts and innovation projects.  Additionally, Sarah worked for the Aquidneck Island Planning Commission, which assists island communities including Newport, in long-term planning coordination as a Project Manager and Interim Executive Director, and also served as a Program Manager for Social Enterprise Greenhouse, a Rhode Island-based organization, fostering inclusive entrepreneurial ecosystems and just, equitable and resilient communities. Sarah partners with Throwe staff as a Field Liaison for the National Coastal Resilience Fund and as a technical assistance provider for the SNEP Network."
+
+        var Sarahmark = L.marker([41.4901, -71.3128], {icon: Sarah}).addTo(map);
+
+        Sarahmark.bindPopup(Sarah_popUp).openPopup();
+
+        //John Morton
+        var John = L.icon({
+            iconUrl: 'john.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [30, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var John_popUp = "<b>John Morton<br>"+ "Project Partner </b><br>"+ "Dr. John Morton also serves as Vice President of both the Alaska Wildlife Alliance and Alaska Quiet Rights Coalition. John recently retired from the U.S. Fish and Wildlife Service after 32 years as a wildlife biologist in Alaska, California, Guam, Maryland and Wisconsin. He first came to Alaska in 1984 to work on Arctic National Wildlife Refuge’s 1002 studies.  He was most recently the supervisory biologist at Kenai National Wildlife Refuge, where he and his staff earned the USFWS Rachel Carson Group Award for Scientific Excellence for their research of the ecological effects of climate change. He represented the USFWS in the GAO’s investigation of climate change impacts on Federal lands (2006) and on DOI’s Climate Change Task Force (2007). He helped develop the USFWS’s Rising to the Urgent Challenge: Strategic Plan for Responding to Accelerating Climate Change and National Fish, Wildlife and Plants Climate Adaptation Strategy (2011). John helped developed the Resist-Accept-Direct decision framework that was recently profiled in a dedicated issue of BioScience (Volume 72 Issue 1 | BioScience | Oxford Academic (oup.com). His work on facilitating ecological transformation was profiled in Yale Environment 360, The Economist, and Deutsche Welle. John holds a BS in Wildlife Ecology from the University of Wisconsin-Madison and MS and PhD in Wildlife Science from Virginia Tech.  John and his wife live and play on the Kenai Peninsula in southcentral Alaska. John partners with Throwe staff as a Field Liaison for the National Coastal Resilience Fund."
+
+        var Johnmark = L.marker([60.4864, -151.0572], {icon: John}).addTo(map);
+
+        Johnmark.bindPopup(John_popUp).openPopup();
+
+        //NAFWS
+        var NAFWS = L.icon({
+            iconUrl: 'nafws.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [30, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NAFWS_popUp = "<b>Native American Fish and Wildlife Society<br>"+ "Partner Organization</b><br>"+ "The Native American Fish and Wildlife Society (NAFWS) is a non-profit 501(c)3 intertribal organization founded in 1983 by a group of Tribal fish and wildlife professionals to “assist Native American and Alaska Native Tribes with the conservation, protection, and enhancement of their fish and wildlife resources.” NAFWS is the only national Tribal organization with a specific focus on Tribal fish and wildlife resources. As a unique membership organization with 227 Support Member Tribes in 7 regions, NAFWS strives to meet the needs of its individual members and member Tribes directly through conferences, trainings, youth education and indirectly through ongoing support of, and providing venues for government consultations, discussions and by participating with innovative projects and initiatives in Indian Country. A large service NAFWS provides is technical assistance to the 574 federally recognized Tribes in the US and fish and wildlife professionals working in Indian Country. Examples of this work include workshops, webinars and trainings on topics of interest to Tribal fish and wildlife programs such as funding, policy and field work. Several staff members will support this project but in particular will be Justin Leon who is the Senior Tribal Climate Resilience Liaison located in Alaska. Throwe is partnering with NAFWS to provide support services to indigenous communities nationally as Field Liaisons for the National Coastal Resilience Fund."
+
+        var NAFWSmark = L.marker([39.8962, -104.9811], {icon: NAFWS}).addTo(map);
+
+        NAFWSmark.bindPopup(NAFWS_popUp).openPopup();
+    
+        //ASAP
+        var ASAP = L.icon({
+            iconUrl: 'asap.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [25, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var ASAP_popUp = "<b>American Society of Adaptation Professionals<br>"+ "Partner Organization</b><br>"+ "The American Society of Adaptation Professionals (ASAP) helps its members strengthen their professional network, exchange best practices and practical advice, and accelerate innovation, all leading to more equitable and effective climate adaptation practices. ASAP works across North America, with members in 47 states and throughout the US, Canada, and the Caribbean. Their network is composed of 1,000 individuals and 40 organizations, with an event and newsletter audience of 4,000. Over the past six years, ASAP has hosted multiple workshops on how to secure funding and financing for climate adaptation and resilience projects. This work has taken the form of in-person training, virtual events, publication of white papers, and most recently their collaboration with Climate Resilience Consulting on the Ready to Fund Toolkit and Training. This toolkit describes how local government leads and partners can design more fundable projects by pulling specific policy levers, seeking key partnerships, using innovative accounting practices, inverting power structures, and rethinking and redesigning internal processes. The accompanying Ready to Fund Resilience Training is a modular course, with up to 5 synchronous sessions and asynchronous homework. Throwe is partnering with ASAP to support communities nationally as Field Liaisons for the National Coastal Resilience Fund. "
+
+        var ASAPmark = L.marker([42.2411, -83.6130], {icon: ASAP}).addTo(map);
+
+        ASAPmark.bindPopup(ASAP_popUp).openPopup();
+
+        //Joanne
+        var Joanne = L.icon({
+            iconUrl: 'joanne.png',
+
+            iconSize:     [40, 40], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [50, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-30, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Joanne_popUp = "<b>Joanne Throwe<br>"+ "Our Team </b><br>"+ "Joanne Throwe is a Senior Fellow at the University of Maryland School of Public Policy. She also serves as the Co-chair of the US EPA Stormwater Task Force for America’s Water Infrastructure Act and was formerly Chair of U.S. EPA’s Environmental Financial Advisory Board, which is responsible for providing innovative financing recommendations to the EPA Administrator. In 2015, she was appointed Deputy Secretary for the Maryland Department of Natural Resources where she helped lead the department from 2015 through 2019. Prior to her appointment, Joanne served as Director at the University of Maryland Environmental Finance Center, where she worked for 10 years. She also worked for several years at USDA and was a Peace Corps volunteer in the Solomon Islands. Joanne was part of the inaugural Maryland Leadership Program on Equity, Diversity, and Inclusion from the University of Baltimore. Joanne received her Master’s degree from the University of Maryland School of Public Policy. She resides in both Annapolis, Maryland and Bristol, Rhode Island."
+
+        var Joannemark = L.marker([41.6771, -71.2662], {icon: Joanne}).addTo(map);
+
+        Joannemark.bindPopup(Joanne_popUp).openPopup();
+
+    
+        </script>
+     </body>
+</html>

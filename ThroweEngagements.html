@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #legend{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index:1000;
+            margin-bottom: 30px;
+            margin-right: 10px;
+            background: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+
+        }
+
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/TE_maps_1.js"></script>
+        <script src="map.js"></script>
+        <script>
+
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1,
+        }).fitBounds([[41.24913585672952,-71.12886071017789],[42.09155622283751,-70.01859368951571]]);
+
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        
+        map.setView([37.0902,-95.7129],4);
+        map.createPane('pane_MapboxStreetsv10_0');
+        map.getPane('pane_MapboxStreetsv10_0').style.zIndex = 400;
+
+        /*var OpenStreetMap_Mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });*/
+
+        var layer_MapboxStreetsv10_0 = L.tileLayer('https://api.mapbox.com/styles/v1/throweenvironmental/clgf8qo81000901ruwolzw74i/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhyb3dlZW52aXJvbm1lbnRhbCIsImEiOiJjbGZqdXZ1NzgwNGxoM3JwcTRrZDZoNzZxIn0.KWbFUGfLMTT9SnJ6WZSRuw', {
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_MapboxStreetsv10_0;
+        
+        map.addLayer(layer_MapboxStreetsv10_0);
+        function pop_TE_maps_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Project'] !== null ? autolinker.link(feature.properties['Project'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        //Land Trust Alliance Rally 2022
+        var LTAR = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var LTAR_popUp = "<b>Land Trust Alliance Rally 2022<br>"+ "NCRF </b><br>"+"Rally is the exciting annual gathering of inspired and passionate land conservation practitioners from around the world who are dedicated to conserving cherished places in our communities. The Land Trust Alliance is hosted its 35th year of Rally: The National Land Conservation Conference in New Orleans, LA in September 2022.  Serving as the premier training and networking conference, Rally offers learning sessions focused on land conservation topics, networking events, exhibits, plenary sessions and an awards presentation celebrating conservation leadership."
+
+        var LTARmark = L.marker([29.9511, -90.0715],  {icon: LTAR}).addTo(map);
+
+        LTARmark.bindPopup(LTAR_popUp).openPopup();
+
+        //NAFWS Great Lakes Regional Conference
+        var NAFWSGL = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NAFWSGL_popUp = "<b>NAFWS Great Lakes Regional Conference<br>"+ "NCRF </b><br>"+"The 2022 Great Lakes NAFWS Regional Conference was hosted by the Lac Courte Oreilles Band of Lake Superior Chippewa Indians during the week of September 18-23, 2022 at the Sevenwinds Casino, Lodge, and Convention Center in Hayward, WI. The theme for the conference was 'Climate Adaptation and Wildlife Diseases.'"
+
+        var NAFWSGLmark = L.marker([46.0130, -91.4846],{icon: NAFWSGL}).addTo(map);
+
+        NAFWSGLmark.bindPopup(NAFWSGL_popUp).openPopup();
+
+        //NAFWS Alaska Regional Conference
+        var NAFWSA = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NAFWSA_popUp = "<b>NAFWS Alaska Regional Conference<br>"+ "NCRF </b><br>"+"The 2022 Alaska NAFWS Regional Conference was hosted by Alaska Village Initiatives on October 19, 2022 at the at the Sheraton Anchorage Hotel & Spa in Anchorage, AK. The theme for the conference was “Climate Adaptation and Wildlife Diseases.” Topics presented and discussed included national & regional updates, technical assistance & training, funding opportunities, and climate resilience."
+
+        var NAFWSAmark = L.marker([61.2176, -149.8997],{icon: NAFWSA}).addTo(map);
+
+        NAFWSAmark.bindPopup(NAFWSA_popUp).openPopup();
+
+        //NAFWS Pacific Regional Conference
+        var NAFWSP = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NAFWSP_popUp = "<b>NAFWS Pacific Regional Conference<br>"+ "NCRF </b><br>"+"The 2022 Pacific Regional Conference was held in Loleta, CA on August 23-25, 2022 hosted by Bear River Band of the Rohnerville Rancheria at the Bear River Casino and Resort in Loleta, CA. The theme for the conference was 'Resilience through Traditional Environmental Knowledge.'"
+
+        var NAFWSPmark = L.marker([40.6411, -124.2], {icon: NAFWSP}).addTo(map);
+
+        NAFWSPmark.bindPopup(NAFWSP_popUp).openPopup();
+
+        //CLCC Annual Conference
+        var CLCC = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var CLCC_popUp = "<b>CLCC Annual Conference<br>"+ "LISFF </b><br>"+"The Connecticut Land Conservation Conference has been the largest conservation gathering and only land trust convocation of its kind in Connecticut. Attracting over 500 attendees, the Annual Conference has provided dynamic training, networking and information sharing opportunities for board members, staff, and volunteers from Connecticut's many land trusts and conservation organizations."
+
+        var CLCCmark = L.marker([41.5623, -72.6506], {icon: CLCC}).addTo(map);
+
+        CLCCmark.bindPopup(CLCC_popUp).openPopup();
+
+        //NAFWS National Annual Conference
+        var NAFWSN = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NAFWSN_popUp = "<b>NAFWS National Annual Conference<br>"+ "NCRF </b><br>"+"The Native American Fish & Wildlife Society 40th Annual National Conference will be hosted by Chugach Regional Resources Commission on April 24-27, 2023 at the Hilton in downtown Anchorage, AK. The theme of the conference was 'Celebrating 40 Years of Success: The Past Holds the Power. The Future Holds the Promise.'"
+        var NAFWSNmark = L.marker([61.1, -149.8], {icon: NAFWSN}).addTo(map);
+
+        NAFWSNmark.bindPopup(NAFWSN_popUp).openPopup();
+
+        //New England Tribal Leaders Summit and Environmental Conference/NAFWS 2022 Northeast Regional Conference
+        var NETLSEC = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NETLSEC_popUp = "<b>New England Tribal Leaders Summit and Environmental Conference/NAFWS 2022 Northeast Regional Conference<br>"+ "NCRF </b><br>"+"The 2022 Northeast Regional Business Dinner was hosted on Tuesday, October 18, 2022. The meeting was held in congruence with the Fall 2022 EPA Region 1 – New England Tribal Leaders Summit & Environmental Conference hosted by the Passamaquoddy Tribe at Pleasant Point at the Bar Harbor Regency in Bar Harbor, ME. Conference attendees and Northeast Region Tribal fish & wildlife professionals and partners were invited to attend. The business dinner included NAFWS National Updates, Regional Director and Alternate elections, and a Climate Resiliency/Justice40 discussion."
+
+        var NETLSECmark = L.marker([44.3876, -68.2039], {icon: NETLSEC}).addTo(map);
+
+        NETLSECmark.bindPopup(NETLSEC_popUp).openPopup();
+
+        //CT Grant Funding Workshop
+        var CTGFW = L.icon({
+            iconUrl: 'marker_green.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var CTGFW_popUp = "<b>CT Grant Funding Workshop<br>"+ "LISFF </b><br>"+"This workshop aimed to help CT communities take advantage of grant funding opportunities, like the Long Island Sound Futures Fund, in the near-term — helping them implement priority projects. Participants learned about the “do’s and don’ts” of a successful proposal, how to successfully engage partners and community members, and how to communicate the benefits of their project to funders. Participating agencies included USDA NRCS, USDA FSA, NFWF, CT DEEP, CT DEMHS, LISFC. A site visit was held at the Keney Park Sustainability Project in Hartford, CT."
+
+        var CTGFWmark = L.marker([41.7658, -72.6734], {icon: CTGFW}).addTo(map);
+
+        CTGFWmark.bindPopup(CTGFW_popUp).openPopup();
+
+        //NH Grant Funding Workshop
+        var NHGFW = L.icon({
+            iconUrl: 'marker_green.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NHGFW_popUp = "<b>NH Grant Funding Workshop<br>"+ "LISFF </b><br>"+"This half-day workshop provided a preview of NH state funding and highlighted two National Fish and Wildlife Foundation (NFWF) grant announcements that support project work in the Upper Connecticut River watershed and coastal New Hampshire. Participants heard directly from funders, learned important tips for creating a competitive proposal, found ways to connect with potential match, and had a chance to talk through specific project ideas with funders and the Long Island Sound Futures Fund and National Coastal Resilience Fund Field Liaison teams."
+
+        var NHGFWmark = L.marker([43.1814, -71.4418], {icon: NHGFW}).addTo(map);
+
+        NHGFWmark.bindPopup(NHGFW_popUp).openPopup();
+
+        //VT Grant Funding Workshop
+        var VTGFW = L.icon({
+            iconUrl: 'marker_green.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var VTGFW_popUp = "<b>VT Grant Funding Workshop<br>"+ "LISFF </b><br>"+"This half-day workshop brought together various federal, state, and philanthropic partners who shared important details about conservation grant announcements that support project work in the Connecticut River Valley watershed in Vermont. Participants heard directly from funders, learned important tips for creating a competitive proposal, found ways to connect with potential match, and had a chance to talk about specific project ideas with funders."
+
+        var VTGFWmark = L.marker([43.6490, -72.3193], {icon: VTGFW}).addTo(map);
+
+        VTGFWmark.bindPopup(VTGFW_popUp).openPopup();
+
+        //NC Communites Resilient Funding Forum
+        var NCCRFF = L.icon({
+            iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NCCRFF_popUp = "<b>NC Communites Resilient Funding Forum<br>"+ "NCRF </b><br>TE attended the North Carolina Climate Resilience Funding Forum in Greenville, North Carolina, in-person on February 28, 2023. At the conference, TE had a table with multiple NCRF resources for participants to engage with, including flyers (both spanish* and english), the interactive footprint map (on IPad), the 2023 RFP, and more. In addition to sharing information at the table, TE gave an overview presentation of NCRF and hosted a breakout session in which participants were able to ask more specific questions about the fund."
+
+        var NCCRFFmark = L.marker([35.6127, -77.3664], {icon: NCCRFF}).addTo(map);
+
+        NCCRFFmark.bindPopup(NCCRFF_popUp).openPopup();
+
+        //SNEP Network Tribal Climate Leadership Exchange
+        var TCLE = L.icon({
+            iconUrl: 'marker_darkblue.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var TCLE_popUp = "<b>SNEP Network Tribal Climate Leadership Exchange<br>"+ "SNEP </b><br>"+"This introductory session explored some of the barriers and opportunities Tribes and Nations face as they pursue funding to support climate resilience initiatives. Through peer-to-peer learning and group discussion, participants exchanged ideas about potential solutions and best practices to address funding barriers."
+
+        var TCLEmark = L.marker([41.3352, -70.8008], {icon: TCLE}).addTo(map);
+
+        TCLEmark.bindPopup(TCLE_popUp).openPopup();
+
+        //Funding Nature Based Community Resilience in Southeastern Massachusetts
+        var CRSM = L.icon({
+            iconUrl: 'marker_darkblue.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var CRSM_popUp = "<b>Funding Nature Based Community Resilience in Southeastern Massachusetts<br>"+ "SNEP </b><br>"+"This workshop highlighted key grant programs available in Massachusetts and the priorities of each, in order to help identify the best program for a project and what makes a competitive application. Attendees were introduced to key nature based climate resilience grant programs that are available to communities in southeastern Massachusetts, learned how to match a project to a funding agency and/or program, learnes best practices for developing a competitive proposal, and talked directly with funders and field liaisons about specific sources of funding."
+
+        var CRSMmark = L.marker([41.9904, -70.9751], {icon: CRSM}).addTo(map);
+
+        CRSMmark.bindPopup(CRSM_popUp).openPopup();
+
+        //Climate Resiliency Planning & Financing Strategy Public Workshop
+        var PFSW = L.icon({
+            iconUrl: 'marker_darkblue.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15]// point from which the popup should open relative to the iconAnchor
+        });
+
+        var PFSW_popUp = "<b>Climate Resiliency Planning & Financing Strategy Public Workshop<br>"+ "SNEP </b><br>"+"The Town of Portsmouth and the Southeast New England Program Network (SNEP) held a public workshop on October 7, 2021 to engage the community in the development of a climate resilience planning and financing strategy for the town. Participants were briefed on the draft prioritized list of resilience capital infrastructure improvement projects and other findings of the climate resilience planning and financing project developed by the Town of Portsmouth and members of the Climate Resilience Workgroup (CRWG) with assistance from the SNEP Network Project Team [comprised of staff from Throwe Environmental and Elizabeth Scott Consulting]."
+
+        var PFSWmark = L.marker([41.6023, -71.2503], {icon: PFSW}).addTo(map);
+
+        PFSWmark.bindPopup(PFSW_popUp).openPopup();
+
+        //Putting Assets to Work Incubator - Pilot Communities Meeting
+        var PAWI = L.icon({
+            iconUrl: 'marker_orange.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var PAWI_popUp = "<b>Putting Assets to Work Incubator - Pilot Communities Meeting<br>"+ "Anne Arundel County and City of Annapolis </b><br>"
+
+        var PAWImark = L.marker([33.7488, -84.3877], {icon: PAWI}).addTo(map);
+
+        PAWImark.bindPopup(PAWI_popUp).openPopup();
+
+        //NEIWPCC Nonpoint Source Pollution Conference//check marker
+        var NEIWPCC = L.icon({iconUrl: 'marker_purple.png',
+
+            iconSize:     [20, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NEIWPCC_popUp = "<b>NEIWPCC Nonpoint Source Pollution Conference<br>"+ "LISFF </b><br>"
+
+        var NEIWPCCmark = L.marker([43.0831, -73.7846], {icon: NEIWPCC}).addTo(map);
+
+        NEIWPCCmark.bindPopup(NEIWPCC_popUp).openPopup();
+
+
+        //“Crafting Competitive Proposals for NCRF and Beyond"
+        var CCP = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var CCP_popUp = "<b>Crafting Competitive Proposals for NCRF and Beyond<br>"+ "NCRF </b><br>"+"Participants learned tips for putting together stronger, competitive, and more successful proposals for various funding sources, including NFWF’s National Coastal Resilience Fund. Participants heard about opportunities to develop specific projects through site visits and proposal development meetings along with ideas for more sustainable approaches to funding and financing."
+
+        var CCPmark = L.marker([41.3497, -72.0791], {icon: CCP}).addTo(map);
+
+        CCPmark.bindPopup(CCP_popUp).openPopup();
+
+        //“Funding Basics for Great Lakes Communities: Crafting Competitive Proposals for NCRF and Beyond”
+        var FBGL = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var FBGL_popUp = "<b>Funding Basics for Great Lakes Communities: Crafting Competitive Proposals for NCRF and Beyond<br>"+ "Presenters applied key tips to various funding opportunities, including the National Fish and Wildlife Foundation’s (NFWF) National Coastal Resilience Fund (NCRF). NCRF’s team of Field Liaisons, Throwe Environmental, helped participants understand how communities can take advantage of the NCRF, as well as other funding sources. Participants brought project-specific ideas and questions for a discussion following a presentation and general Q&A."
+
+        var FBGLmark = L.marker([42.6526, -73.7562], {icon: FBGL}).addTo(map);
+
+        FBGLmark.bindPopup(FBGL_popUp).openPopup();
+
+        //“Funding Basics for Northeast Wisconsin Communities: Crafting Competitive Proposals for NCRF and Beyond”
+        var NEW = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var NEW_popUp = "<b>Funding Basics for Northeast Wisconsin Communities: Crafting Competitive Proposals for NCRF and Beyond<br>"+ "NCRF</b><br>"+"Presenters will apply key tips to the National Fish and Wildlife Foundation’s (NFWF) National Coastal Resilience Fund (NCRF). NCRF invests in projects that will create, expand, and restore natural systems in areas that will (1) increase protection for communities from coastal storms, fluctuating lake levels, inundation, and coastal erosion and (2) improve valuable habitats for fish and wildlife species. NCRF’s team of Field Liaisons, Throwe Environmental, will be available to help you understand how communities can take advantage of the NCRF and other funding sources. Participants are invited to bring project-focused questions for a Q&A following the presentation."
+
+        var NEWmark = L.marker([44.4489, -88.0604], {icon: NEW}).addTo(map);
+
+        NEWmark.bindPopup(NEW_popUp).openPopup();
+        
+        //“Funding Basics for Coastal Ohio Communities: Crafting Competitive Proposals for the National Coastal Resilience Fund and Beyond”
+        var COC = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var COC_popUp = "<b>Funding Basics for Coastal Ohio Communities: Crafting Competitive Proposals for the National Coastal Resilience Fund and Beyond<br>"+ "NCRF</b><br>"+"NCRF’s team of Field Liaisons, Throwe Environmental, will be available to help you understand how communities can take advantage of the NCRF and other funding sources. Participants are invited to bring questions for a Q&A following the presentation. This webinar is geared towards Ohio communities in the Lake Erie watershed."
+
+        var COCmark = L.marker([40.0992, -83.1141], {icon: COC}).addTo(map);
+
+        COCmark.bindPopup(COC_popUp).openPopup();
+
+        //“Funding Basics for Urban Ohio Communities: Crafting Competitive Proposals for the National Coastal Resilience Fund and Beyond”
+        var UOC = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var UOC_popUp = "<b>Funding Basics for Urban Ohio Communities: Crafting Competitive Proposals for the National Coastal Resilience Fund and Beyond<br>"+ "NCRF</b><br>"+"NCRF’s team of Field Liaisons, Throwe Environmental, will be available to help you understand how communities can take advantage of the NCRF and other funding sources. Participants are invited to bring questions for a Q&A following the presentation. This webinar is geared towards urban Ohio communities in the Lake Erie watershed."
+
+        var UOCmark = L.marker([41.4993, -81.6944], {icon: UOC}).addTo(map);
+
+        UOCmark.bindPopup(UOC_popUp).openPopup();
+
+        //“Federal Funds for Resilience Projects: National Coastal Resilience Fund and Long Island Sound Futures Fund Webinar”
+        var FFRP = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var FFRP_popUp = "<b>Federal Funds for Resilience Projects: National Coastal Resilience Fund and Long Island Sound Futures Fund Webinar<br>"+ "NCRF and LISFF</b><br>"+"Learn about these two grant programs with funds available to support resilience planning and projects in CT. Webinar will provide an overview of the grant programs with an extended Q&A where participants can receive feedback on pre-proposals or ideas."
+
+        var FFRPmark = L.marker([41.7658, -72.6734], {icon: FFRP}).addTo(map);
+
+        FFRPmark.bindPopup(FFRP_popUp).openPopup();
+
+        //“Forests in Cities/Throwe Environmental National Coastal Resilience Fund Workshop”
+        var FIC = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var FIC_popUp = "<b>Forests in Cities/Throwe Environmental National Coastal Resilience Fund Workshop<br>"+ "NCRF</b><br>"+"Learn about the National Coastal Resilience Fund, a $140M annual grant program offered by the National Fish and Wildlife Foundation. In this webinar, NCRF Field Liaisons at Throwe Environmental highlight opportunities for projects in urban forested areas within the NCRF funding opportunity."
+
+        var FICmark = L.marker([40.7128, -74.0060], {icon: FIC}).addTo(map);
+
+        FICmark.bindPopup(FIC_popUp).openPopup();
+
+        //“Navigating Resilience Grant Funding for Oregon’s Tribal and Coastal Communities”
+        var OTCC = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var OTCC_popUp = "<b>Navigating Resilience Grant Funding for Oregon’s Tribal and Coastal Communities<br>"+ "NCRF</b><br>"+"The sheer number of grant funding opportunities currently available can be overwhelming and difficult to navigate to meet specific project needs. This half day forum aims to bring together various federal, state, and philanthropic partners who will share important details about existing and upcoming grant announcements. You will hear directly from funders, learn important tips for creating a competitive proposal, connect with partners, hear about opportunities to address match requirements, and have a chance to meet directly with funders to discuss projects and learn more about available funding opportunities."
+
+        var OTCCmark = L.marker([44.9429, -123.0351], {icon: OTCC}).addTo(map);
+
+        OTCCmark.bindPopup(OTCC_popUp).openPopup();
+
+        //“National Coastal Resilience Fund Opportunities For Michigan Municipalities”
+        var MM = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var MM_popUp = "<b>National Coastal Resilience Fund Opportunities For Michigan Municipalities<br>"+ "NCRF</b><br>"+"As communities across Michigan experience intensifying climate-driven and water-related coastal hazards, it is essential that long-term investments are made to build capacity and enhance local resilience. The National Fish and Wildlife Foundation’s (NFWF) annual National Coastal Resilience Fund (NCRF) grant program provides opportunities for Michigan communities and organizations to invest in sustainable, nature-based resilience solutions. Over the next 4 years, the NCRF anticipates making over $140 million in funding available annually to support planning, design, and implementation efforts that enhance community resilience and provide benefits to fish and wildlife habitat."
+
+        var MMmark = L.marker([42.2808, -83.7430], {icon:  MM}).addTo(map);
+
+        MMmark.bindPopup(MM_popUp).openPopup();
+
+        //“Coastal Resilience Funding Opportunities for Connecticut”
+        var Conn = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Conn_popUp = "<b>Coastal Resilience Funding Opportunities for Connecticut<br>"+ "NCRF</b><br>"+"In this session, presenters will introduce potential applicants to NCRF and other resilience programs, inform them about the type of technical assistance that is available, and share examples of nature-based solutions in the Northeast region. There will be time at the end of the presentation for Q&amp;A and “office hours” with the CT DEEP Resilience Program staff and the NCRF Field Liaison team at Throwe Environmental. Watch the event"
+
+        var Connmark = L.marker([41.7658, -72.], {icon:  Conn}).addTo(map);
+
+        Connmark.bindPopup(Conn_popUp).openPopup();
+
+        //"Funding and Financing Climate Resilient Communities"
+        var Mass = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Mass_popUp = "<b>Funding and Financing Climate Resilient Communities<br>"+ "NCRF</b><br>"+"Storm Surge will host its final Speaker Series program this fall, “Funding and Financing Climate Resilient Communities,’’ on Sept. 28.The program, which begins at 7 p.m., will be held in person at the Senior Community Center and virtually on Zoom. Anyone interested in this free program should register in advance at https://storm-surge.org. All COVID-19 protocols will be followed."
+""
+
+        var Massmark = L.marker([42.7649, -70.8715], {icon:  Mass}).addTo(map);
+
+        Massmark.bindPopup(Mass_popUp).openPopup();
+
+        //"Resilient Virginia 2021: From Recovery to Resilience"
+        var Virg = L.icon({iconUrl: 'leaf_purple.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Virg_popUp = "<b>Resilient Virginia 2021: From Recovery to Resilience<br>"+ "NCRF</b><br>"+"Once resiliency solutions are identified, the challenge becomes implementation of the prioritized actions. This workshop takes an in-depth look at urban and rural localities in Virginia and elsewhere that are making progress on the critical next steps of implementation. This session will include a discussion of how to address and overcome policy and funding challenges."
+""
+
+        var Virgmark = L.marker([38.1374, -78.1878], {icon:  Virg}).addTo(map);
+
+        Virgmark.bindPopup(Virg_popUp).openPopup();
+
+        //"Soak Up the Rain: Addressing Stormwater Flooding through Resilience Action Strategies and Sustainable Financing"
+        var Storm = L.icon({iconUrl: 'leaf_blue.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Storm_popUp = "<b>Soak Up the Rain: Addressing Stormwater Flooding through Resilience Action Strategies and Sustainable Financing<br>"+ "NCRF</b><br>"+"Across New England, climate change and sea-level rise are exacerbating the impacts of stormwater and coastal flooding, making the case for “soaking up the rain” even stronger. The Towns of Bourne, MA and Portsmouth, RI are addressing water quantity and quality challenges head-on. Working with the Southeast New England Program (SNEP) Network, Bourne and Portsmouth are developing resilience action strategies that move the conversation beyond planning into resilience-building activities and sustainable financing strategies. In this webinar, participants will learn about the ways in which Bourne and Portsmouth are charting the course for climate resilience and climate finance in the region. Presenters from SNEP Network partner organization Throwe Environmental, LLC will share details about these projects and demonstrate some of the new tools and funding resources that they are using to guide their work for maximum impact. Examples will include a Resilience Capital Improvement Program (RCIP), Climate Resilience Investment System Implementation Plan, and Climate Priority Toolkit. Attendees will also hear directly from panelists from Bourne and Portsmouth, who will share their perspectives and speak to the benefits of proactively taking action to become more climate resilient."
+""
+
+        var Stormmark = L.marker([42.3601, -71.0589], {icon:  Storm}).addTo(map);
+
+        Stormmark.bindPopup(Storm_popUp).openPopup();
+
+        //NCRF shape
+        var NCRF = L.icon({iconUrl: 'leaf_blue.png',
+
+            iconSize:     [25, 32], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [15, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-6, -15] // point from which the popup should open relative to the iconAnchorpopupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var Storm_popUp = "<b>Soak Up the Rain: Addressing Stormwater Flooding through Resilience Action Strategies and Sustainable Financing<br>"+ "NCRF</b><br>"+"Across New England, climate change and sea-level rise are exacerbating the impacts of stormwater and coastal flooding, making the case for “soaking up the rain” even stronger. The Towns of Bourne, MA and Portsmouth, RI are addressing water quantity and quality challenges head-on. Working with the Southeast New England Program (SNEP) Network, Bourne and Portsmouth are developing resilience action strategies that move the conversation beyond planning into resilience-building activities and sustainable financing strategies. In this webinar, participants will learn about the ways in which Bourne and Portsmouth are charting the course for climate resilience and climate finance in the region. Presenters from SNEP Network partner organization Throwe Environmental, LLC will share details about these projects and demonstrate some of the new tools and funding resources that they are using to guide their work for maximum impact. Examples will include a Resilience Capital Improvement Program (RCIP), Climate Resilience Investment System Implementation Plan, and Climate Priority Toolkit. Attendees will also hear directly from panelists from Bourne and Portsmouth, who will share their perspectives and speak to the benefits of proactively taking action to become more climate resilient."
+""
+
+        var Stormmark = L.marker([42.3601, -71.0589], {icon:  Storm}).addTo(map);
+
+        Stormmark.bindPopup(Storm_popUp).openPopup();
+
+
+        var legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = ["National Coastal Resilience Fund", "Long Island Sound Futures Fund", "Southeast New England Program", "Baltimore County", "Anne Arundel County and Annapolis", "The Nature Conservancy", "Webinars"],
+                labels = ["marker_purple.png", "marker_green.png", "marker_darkblue.png", "marker_yellow.png", "marker_orange.png", "marker_pink.png", "leaf.png"];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    (" <img src="+ labels[i] +" height='30' width='20'>") + grades[i] +'<br>';
+            }
+
+            return div;
+        };
+
+        legend.addTo(map);
+
+        //NCRFs
+        var ncrfShape = L.geoJSON(NCRF).addTo(map);
+    
+    
+        </script>
+     </body>
+
+</html>
